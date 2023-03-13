@@ -7,7 +7,7 @@ class QueueService extends Squiss {
         accessKeyId: `dummy`,
         secretAccessKey: `dummy`,
         region: `dummy`,
-        endpoint: `http://localhost:9324`,
+        endpoint: `http://sqs:9324`,
       },
       queueName: `exchange-rate`,
       bodyFormat: `json`,
