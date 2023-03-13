@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import CurrencyService from '../services/currency.service';
 import IConversionRequest from '../interfaces/conversion-request.interface';
+import QueueService from '../services/queue.service';
 
 class CurrencyController {
   public async conversionRate(req: Request, res: Response): Promise<Response> {
@@ -9,9 +10,11 @@ class CurrencyController {
       const conversionService = new CurrencyService(conversionRequest);
       const conversionResponse = await conversionService.rateExchange();
 
-      return res.json({
+      const queue = new QueueService();
+      queue.sendMessage(conversionResponse);
+
+      return res.status(201).json({
         success: true,
-        data: conversionResponse,
       });
     } catch (error) {
       return res.json({

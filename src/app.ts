@@ -1,8 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
+import { Message } from 'squiss-ts';
 
 import currencyRoute from './routes/currency.route';
+import QueueService from './services/queue.service';
+import MailService from './services/mail.service';
+import IConversionResponse from './interfaces/conversion-response.interface';
 
 dotenv.config();
 
@@ -13,6 +17,7 @@ class App {
     this.express = express();
     this.middlewares();
     this.routes();
+    this.setQueue();
   }
 
   private middlewares(): void {
@@ -22,6 +27,17 @@ class App {
 
   private routes(): void {
     this.express.use(`/currency`, currencyRoute);
+  }
+
+  private setQueue(): void {
+    const queue = new QueueService();
+    const mailer = new MailService();
+    queue.start();
+
+    queue.on(`message`, async (message: Message) => {
+      await mailer.sendMessage(message.body as unknown as IConversionResponse);
+      message.del();
+    });
   }
 }
 
