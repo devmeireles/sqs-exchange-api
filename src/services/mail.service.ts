@@ -15,13 +15,13 @@ class MailService {
     });
   }
 
-  async sendMessage(data: IConversionResponse): Promise<void> {
+  async sendMessage(data: IConversionResponse): Promise<boolean> {
     const subject = `Rate Friend: ${data.from} to ${data.to}`;
     const message = `${data.from} ${data.amount} to ${data.to} is currently ${data.value.toFixed(2)} based on ${
       data.rate
     } rate`;
 
-    return await this.transporter.sendMail({
+    const sent = await this.transporter.sendMail({
       to: {
         name: `Client name`,
         address: `client@mail.com`,
@@ -33,6 +33,8 @@ class MailService {
       subject,
       text: message,
     });
+
+    return !!sent;
   }
 }
 
