@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  sqs:
+    container_name: sqs
+    image: roribio16/alpine-sqs:latest
+    restart: always
+    networks:
+      - exchange
+    ports:
+      - "9324:9324"
+      - "9325:9325"
+    volumes:
+      - ./config/elasticmq.conf:/opt/config/elasticmq.conf
+  app:
+    container_name: node_app
+    build: .
+    restart: always
+    environment:
+      - EXCHANGER_BASE_URL=https://openexchangerates.org/api/latest.json?app_id
+      - API_ID=c88ba46af56a4c1ea8c7112d9e248d86
+    ports:
+      - "3000:3000"
+    networks:
+      - exchange
+    depends_on:
+      - sqs
+
+networks:
+  exchange:
+    driver: bridge
