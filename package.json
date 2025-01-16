@@ -63,7 +63,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.19.2",
-    "nodemailer": "^6.9.1",
+    "nodemailer": "^6.9.9",
     "squiss-ts": "^4.4.1"
   }
 }
